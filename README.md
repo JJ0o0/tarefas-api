@@ -1,15 +1,22 @@
 # Tarefas API
 API REST para gerenciamento de tarefas com autenticação JWT, desenvolvida com Spring Boot e PostgreSQL.
 
+Projeto focado em autenticação stateless, segurança e organização em camadas.
+
+---
+
 ## Tecnologias
 - Java 21
-- Spring Boot 4.0.5
+- Spring Boot
 - Spring Security
 - Spring Data JPA
 - JWT (JSON Web Token)
 - PostgreSQL
 - Docker
 - JUnit 5 + Mockito
+- Swagger (OpenAPI)
+
+---
 
 ## Funcionalidades
 - Cadastro de usuários
@@ -18,6 +25,9 @@ API REST para gerenciamento de tarefas com autenticação JWT, desenvolvida com 
 - Cada usuário acessa apenas suas próprias tarefas
 - Senhas armazenadas com hash (BCrypt)
 - Proteção de endpoints com Spring Security
+- Documentação interativa com Swagger
+
+---
 
 ## Fluxo de Autenticação
 1. Usuário se registra com email e senha
@@ -28,12 +38,17 @@ API REST para gerenciamento de tarefas com autenticação JWT, desenvolvida com 
 6. O cliente envia o token nas requisições protegidas
 7. A API valida o token e identifica o usuário autenticado
 
-## Decisões de Arquitetura
-* Autenticação stateless utilizando JWT
-* Separação em camadas (Controller, Service, Repository)
-* Uso de DTOs para transferência de dados
-* Relacionamento entre usuário e tarefas para isolamento de dados
-* Spring Security para controle de acesso
+## Arquitetura
+
+- Arquitetura em camadas:
+    - Controller
+    - Service
+    - Repository
+- Uso de DTOs para comunicação
+- Autenticação stateless com JWT
+- Relacionamento entre usuário e tarefas
+
+---
 
 ## Segurança
 * Autenticação baseada em JWT
@@ -41,9 +56,13 @@ API REST para gerenciamento de tarefas com autenticação JWT, desenvolvida com 
 * Endpoints protegidos com Spring Security
 * Acesso restrito às tarefas do próprio usuário
 
+---
+
 ## Pré-Requisitos
 - Java 21
 - Docker
+
+---
 
 ## Como rodar
 
@@ -68,6 +87,16 @@ Rode o projeto:
 ./mvnw spring-boot:run
 ```
 
+---
+
+## Documentação da API
+Após iniciar a aplicação, acesse:
+```bash
+http://localhost:8080/swagger-ui/index.html
+```
+
+---
+
 ## Endpoints
 
 ### Autenticação:
@@ -77,6 +106,8 @@ Rode o projeto:
 |  POST   | /auth/register  |     Registra novo usuário      |
 |  POST   |   /auth/login   | Autentica e retorna token JWT  |
 
+---
+
 ### Tarefas (requer autenticação):
 | Método |   Endpoint    |        Descrição         |
 |:------:|:-------------:|:------------------------:|
@@ -84,6 +115,8 @@ Rode o projeto:
 |  POST  |   /tarefas    |     Cria nova tarefa     |
 |  PUT   | /tarefas/{id} |     Atualiza tarefa      |
 | DELETE | /tarefas/{id} |      Remove tarefa       |
+
+---
 
 ## Exemplo de uso
 
@@ -102,7 +135,7 @@ curl -X POST http://localhost:8080/auth/login \
 ```
 
 Resposta:
-```bash
+```json
 {
   "token": "seu_token_jwt"
 }
@@ -110,8 +143,12 @@ Resposta:
 
 ### Criar tarefa:
 ```bash
-curl -X POST http://localhost:8080/tarefas \ 
+curl -X POST http://localhost:8080/tarefas \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer seu_token_jwt" \
   -d '{"titulo": "Estudar Java", "descricao": "Estudar segurança com o JWT."}'
 ```
+
+## Autor
+
+João Gabriel (a.k.a JJ0o0)

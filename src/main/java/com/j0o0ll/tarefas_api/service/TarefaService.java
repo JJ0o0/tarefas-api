@@ -1,5 +1,8 @@
 package com.j0o0ll.tarefas_api.service;
 
+import com.j0o0ll.tarefas_api.dto.TarefaRequest;
+import com.j0o0ll.tarefas_api.dto.TarefaResponse;
+import com.j0o0ll.tarefas_api.dto.TarefaUpdateRequest;
 import com.j0o0ll.tarefas_api.model.Tarefa;
 import com.j0o0ll.tarefas_api.model.Usuario;
 import com.j0o0ll.tarefas_api.repository.TarefaRepository;
@@ -19,39 +22,47 @@ public class TarefaService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public Tarefa criar(Tarefa tarefa, String email) {
+    public TarefaResponse criar(TarefaRequest request, String email) {
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        tarefa.setUsuario(usuario);
 
-        return repository.save(tarefa);
+        Tarefa tarefa = new Tarefa(
+                request.getTitulo(),
+                request.getDescricao(),
+                false,
+                usuario
+        );
+
+        return new TarefaResponse(repository.save(tarefa));
     }
 
-    public List<Tarefa> listarPorUsuario(String email) {
+    public List<TarefaResponse> listarPorUsuario(String email) {
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        List<Tarefa> tarefas = repository.findByUsuario(usuario);
 
-        return tarefas;
+        return repository.findByUsuario(usuario).stream()
+                .map(TarefaResponse::new)
+                .toList();
     }
 
-    public Optional<Tarefa> atualizar(Long id, Tarefa dados) {
+    public Optional<TarefaResponse> atualizar(Long id, TarefaUpdateRequest dados, String email) {
         return repository.findById(id)
+                .filter(t -> t.getUsuario().getEmail().equals(email))
                 .map(tarefa -> {
                    tarefa.setTitulo(dados.getTitulo());
                    tarefa.setDescricao(dados.getDescricao());
                    tarefa.setConcluida(dados.isConcluida());
 
-                   return repository.save(tarefa);
+                   return new TarefaResponse(repository.save(tarefa));
                 });
     }
 
-    public boolean deletar(Long id) {
-        if (!repository.existsById(id)) {
-            return false;
-        }
-
-        repository.deleteById(id);
-        return true;
+    public boolean deletar(Long id, String email) {
+        return repository.findById(id)
+                .filter(t -> t.getUsuario().getEmail().equals(email))
+                .map(tarefa -> {
+                    repository.delete(tarefa);
+                    return true;
+                }).orElse(false);
     }
 }
