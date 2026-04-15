@@ -151,6 +151,8 @@ curl -X POST http://localhost:8080/tarefas \
   -d '{"titulo": "Estudar Java", "descricao": "Estudar segurança com o JWT."}'
 ```
 
+---
+
 ## Autor
 
 João Gabriel (a.k.a JJ0o0)
