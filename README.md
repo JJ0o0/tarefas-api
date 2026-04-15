@@ -38,6 +38,8 @@ Projeto focado em autenticação stateless, segurança e organização em camada
 6. O cliente envia o token nas requisições protegidas
 7. A API valida o token e identifica o usuário autenticado
 
+---
+
 ## Arquitetura
 
 - Arquitetura em camadas:
