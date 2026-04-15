@@ -56,22 +56,42 @@ public class SecurityConfig {
     @Bean
     public OncePerRequestFilter jwtFilter() {
         return new OncePerRequestFilter() {
+
             @Override
-            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+            protected boolean shouldNotFilter(HttpServletRequest request) {
+                String path = request.getServletPath();
+
+                return path.startsWith("/auth/")
+                        || path.startsWith("/swagger-ui")
+                        || path.startsWith("/v3/api-docs");
+            }
+
+            @Override
+            protected void doFilterInternal(
+                    HttpServletRequest request,
+                    HttpServletResponse response,
+                    FilterChain filterChain
+            ) throws ServletException, IOException {
+
                 String header = request.getHeader("Authorization");
 
                 if (header != null && header.startsWith("Bearer ")) {
-                    String token = header.substring(7);
+                    try {
+                        String token = header.substring(7);
 
-                    if (jwtService.tokenValido(token)) {
-                        String email = jwtService.extrairEmail(token);
+                        if (jwtService.tokenValido(token)) {
+                            String email = jwtService.extrairEmail(token);
 
-                        var userDetails = userDetailsService.loadUserByUsername(email);
-                        var auth = new UsernamePasswordAuthenticationToken(
-                                userDetails, null, userDetails.getAuthorities()
-                        );
+                            var userDetails = userDetailsService.loadUserByUsername(email);
 
-                        SecurityContextHolder.getContext().setAuthentication(auth);
+                            var auth = new UsernamePasswordAuthenticationToken(
+                                    userDetails, null, userDetails.getAuthorities()
+                            );
+
+                            SecurityContextHolder.getContext().setAuthentication(auth);
+                        }
+                    } catch (Exception e) {
+                        SecurityContextHolder.clearContext();
                     }
                 }
 
