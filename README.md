@@ -99,6 +99,13 @@ http://localhost:8080/swagger-ui/index.html
 
 ---
 
+## API em produção
+
+Base URL:
+https://tarefas-api-9xoh.onrender.com
+
+---
+
 ## Endpoints
 
 ### Autenticação:
