@@ -89,6 +89,13 @@ Rode o projeto:
 ./mvnw spring-boot:run
 ```
 
+### OU
+
+Use o link público da API:
+```bash
+https://tarefas-api-9xoh.onrender.com
+```
+
 ---
 
 ## Documentação da API
@@ -96,13 +103,6 @@ Após iniciar a aplicação, acesse:
 ```bash
 http://localhost:8080/swagger-ui/index.html
 ```
-
----
-
-## API em produção
-
-Base URL:
-https://tarefas-api-9xoh.onrender.com
 
 ---
 
