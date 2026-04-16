@@ -12,7 +12,6 @@ public class TarefaUpdateRequest {
     @Schema(example = "Nova Descrição")
     private String descricao;
 
-    @NotBlank
     @Schema(example = "false", type = "boolean")
     private boolean concluida;
 
